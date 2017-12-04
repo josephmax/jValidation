@@ -8,12 +8,19 @@
     "prepublish": "make",
     "dev": "./node_modules/.bin/nodemon -e js -x npm test"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/josephmax/jValidation.git"
+  },
   "keywords": [
     "validator",
     "validation"
   ],
   "author": "Joseph Cheung",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/josephmax/jValidation/issues"
+  },
   "dependencies": {
     "babel-core": "^6.26.0",
     "babel-jest": "^21.2.0",
