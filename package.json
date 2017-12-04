@@ -1,0 +1,33 @@
+{
+  "name": "jvalidation",
+  "version": "1.0.0",
+  "description": "a simple validation util",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "jest",
+    "prepublish": "make",
+    "dev": "./node_modules/.bin/nodemon -e js -x npm test"
+  },
+  "keywords": [
+    "validator",
+    "validation"
+  ],
+  "author": "Joseph Cheung",
+  "license": "MIT",
+  "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-jest": "^21.2.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "jest": "^21.2.1",
+    "jest-cli": "^21.2.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-es2015-spread": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "nodemon": "^1.12.1"
+  }
+}
