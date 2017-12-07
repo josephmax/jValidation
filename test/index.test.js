@@ -1,4 +1,4 @@
-import Validation, { GroupValidation } from '../lib/index'
+import Validation, { GroupValidation } from '../src/index'
 
 const useCase = {
   isRequired: [
@@ -153,7 +153,7 @@ describe('Single Validation Item Test', () => {
           _validation[key](...item.args)
           expect(_validation.result).toBe(item.output[0])
           item.output[1] && expect(_validation.info).toBe(item.output[1])
-          item.output[2] && expect(_validation.invalid).toEqual(item.output[2])
+          item.output[2] && expect(_validation.getInvalidTags()).toEqual(item.output[2])
         })
       })
     })
@@ -173,32 +173,32 @@ describe('Composed Validation Test', () => {
       _validation.isChName('非全中文', 'cnName')
       expect(_validation.result).toBe(false)
       expect(_validation.info).toBe('非全中文')
-      expect(_validation.invalid).toEqual(['cnName'])
+      expect(_validation.getInvalidTags()).toEqual(['cnName'])
       _validation.isLengthBetween(3, 6, '长度不符', 'length')
       expect(_validation.result).toBe(false)
       expect(_validation.info).toBe('长度不符')
-      expect(_validation.invalid).toEqual(['cnName', 'length'])
+      expect(_validation.getInvalidTags()).toEqual(['cnName', 'length'])
     })
     test('asserted composed, case 1', () => {
       let _validation = new Validation('名字长躲在树后会被发现')
       _validation.isChName().isLengthBetween(3,6,'长度不符合')
       expect(_validation.result).toBe(false)
       expect(_validation.info).toBe('长度不符合')
-      expect(_validation.invalid).toEqual([])
+      expect(_validation.getInvalidTags()).toEqual([])
     })
     test('asserted compose, case 2', () => {
       let _validation = new Validation('名字长躲在树后会被发现o')
       _validation.isChName('名字不对啦', 'cnName').isLengthBetween(3, 6, '长度不符合', 'length')
       expect(_validation.result).toBe(false)
       expect(_validation.info).toEqual('名字不对啦')
-      expect(_validation.invalid).toEqual(['cnName'])
+      expect(_validation.getInvalidTags()).toEqual(['cnName'])
     })
     test('non-asserted compose, case 1', () => {
       let _validation = new Validation('名字长躲在树后会被发现o', {assertion: false})
       _validation.isChName('名字不对啦', 'cnName').isLengthBetween(3, 6, '长度不符合', 'length')
       expect(_validation.result).toBe(false)
       expect(_validation.info).toBe('长度不符合')
-      expect(_validation.invalid).toEqual(['cnName', 'length'])
+      expect(_validation.getInvalidTags()).toEqual(['cnName', 'length'])
     })
   })
 })
@@ -218,7 +218,7 @@ describe('Group validation test', () => {
     _validation.validate()
     expect(_validation.result).toBe(false)
     expect(_validation.info).toBe('请输入3-6长的字符')
-    expect(_validation.invalid).toEqual(['length'])
+    expect(_validation.getInvalidTags()).toEqual(['length'])
   })
   test('valid idCardNo, mobile and name with mixed rules, pattern 2', () => {
     let _validation = new GroupValidation(
@@ -228,7 +228,7 @@ describe('Group validation test', () => {
     _validation.validate()
     expect(_validation.result).toBe(false)
     expect(_validation.info).toBe('请输入3-6长的字符')
-    expect(_validation.invalid).toEqual(['length'])
+    expect(_validation.getInvalidTags()).toEqual(['length'])
   })
   test('valid idCardNo, mobile and name with mixed rules, non-asserted', () => {
     const sample = {
@@ -243,14 +243,19 @@ describe('Group validation test', () => {
     _validation.validate(false)
     expect(_validation.result).toBe(false)
     expect(_validation.info).toBe('请输入合法身份证')
-    expect(_validation.invalid).toEqual(['name', 'length', 'mobile', 'idcard'])
+    expect(_validation.getInvalidTags()).toEqual(['name', 'length', 'mobile', 'idcard'])
   })
   test('side condition: default output with no argument', () => {
     let _validation = new GroupValidation()
     _validation.validate()
     expect(_validation.result).toBe(true)
     expect(_validation.info).toBe('')
-    expect(_validation.invalid).toEqual([])
+    expect(_validation.getInvalidTags()).toEqual([])
+    let name = 'John'
+    let _validation1 = new Validation(name, {assertion: false})
+
+    _validation1.isRequired().isChName().isLengthBetween(5,8,'长度不对', 'length')
+    console.log(_validation1)
   })
 })
 

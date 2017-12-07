@@ -34,10 +34,24 @@ class Validation {
     this.result = !!result
     if (result === false) {
       this.info = info
-      tag && this
-        .invalid
-        .push(tag)
+      if (tag) {
+        this.invalid.push({ tag, info })
+      }
     }
+  }
+
+  getInvalidTags = () => {
+    return removeDuplicate(this.invalid.map(item => item.tag))
+  }
+
+  getInvalidInfo = () => {
+    return this.invalid.reduce((info, next, index) => ({
+      ...info,
+      [next.tag]: {
+        ...next,
+        index
+      }
+    }), {})
   }
 
   isRequired = (info = '请输入必填项', tag) => {
@@ -49,7 +63,7 @@ class Validation {
     return this
   }
 
-  isChName = (info = '请输入中文字符', tag = 'name') => {
+  isChName = (info = '请输入中文字符', tag = 'name') => {
     if (this.isAsserted() || this.isEmpty()) 
       return this
     if (/^[\u4E00-\u9FFF]+$/.test(this.target) === false) {
@@ -207,9 +221,22 @@ class Group {
       this.info = err.info
       this.invalid = err.invalid
     } finally {
-      this.invalid = removeDuplicate(this.invalid)
       return this
     }
+  }
+
+  getInvalidTags = () => {
+    return removeDuplicate(this.invalid.map(item => item.tag))
+  }
+
+  getInvalidInfo = () => {
+    return this.invalid.reduce((info, next, index) => ({
+      ...info,
+      [next.tag]: {
+        ...next,
+        index
+      }
+    }), {})
   }
 }
 
